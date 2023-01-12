@@ -1,10 +1,11 @@
-class Round
-  private attr_accessor :mistakes
+class Game
+  private attr_accessor :mistakes, :choices
   private attr_reader :answer
   def initialize(words)
     @words = words    
     @answer = select_word(words)
     @mistakes = 0
+    @choices = []
     draw_hangman(mistakes)
   end
 
@@ -17,12 +18,13 @@ class Round
   end
 
   def begin_round
-    if mistakes < 7 
+    while mistakes <= 7 
       # play the round
       puts "Please enter a character!"
-    else
-      puts "Sorry! You're out of chances."
+      print "Characters entered so far:"
+      p choices
     end
+      puts "Sorry! You're out of chances."
   end
 
   def draw_hangman(index)
@@ -82,4 +84,4 @@ end
 
 contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
 
-Round.new(contents).begin_round
+Game.new(contents).begin_round
