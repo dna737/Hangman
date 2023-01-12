@@ -17,6 +17,12 @@ class Game
     p word
   end
 
+  def check_input(input)
+    unless answer.include?(input)
+      mistakes += 1
+    end
+  end
+
   def seek_input
     puts "Please enter a character (CaSe SeNsItIvE)!\nCharacters entered so far:\n"
       p choices
@@ -30,8 +36,8 @@ class Game
         puts "Waiting for input..." 
         input = gets.chomp        
       end
-      
       choices.push(input)
+
   end
 
   def display_puzzle
@@ -41,6 +47,7 @@ class Game
     while mistakes <= 7 
       display_puzzle
       seek_input
+      check_input
       # play the round
       
     end
