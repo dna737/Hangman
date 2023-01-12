@@ -1,12 +1,85 @@
-def select_word(words)
-  word = words[rand(words.length - 1)].chomp
-  until word.length.between?(5,12)
-    word = words[rand(words.length - 1)].chomp    
+class Round
+  private attr_accessor :mistakes
+  private attr_reader :answer
+  def initialize(words)
+    @words = words    
+    @answer = select_word(words)
+    @mistakes = 0
+    draw_hangman(mistakes)
   end
-  word
+
+  def select_word(words)
+    word = words[rand(words.length - 1)]
+    until word.length.between?(5,12)
+      word = words[rand(words.length - 1)]  
+    end
+    p word
+  end
+
+  def begin_round
+    if mistakes < 7 
+      # play the round
+      puts "Please enter a character!"
+    else
+      puts "Sorry! You're out of chances."
+    end
+  end
+
+  def draw_hangman(index)
+    arr = [%{    +---+
+        |
+        |
+        |
+        |
+        |
+      =====}, %{    +---+
+    |   |   
+        |
+        |
+        |
+        |
+      =====}, %{      +---+
+      |   |
+      O   |
+          |
+          |
+          |
+    =========}, %{      +---+
+      |   |
+      O   |
+      |   |
+          |
+          |
+    =========}, %{      +---+
+      |   |
+      O   |
+     /|   |
+          |
+          |
+    =========}, %q{      +---+
+      |   |
+      O   |
+     /|\  |
+          |
+          |
+    =========}, %q{      +---+
+      |   |
+      O   |
+     /|\  |
+     /    |
+          |
+    =========}, %q{      +---+
+      |   |
+      O   |
+     /|\  |
+     / \  |
+          |
+    =========}]
+    arr[index]
+  end
+
 end
 
-contents = File.readlines("./google-10000-english-no-swears.txt")
+contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
 
-#The game has started. Choose a random word between 5-12 characters.
-p select_word(contents)
+Round.new(contents).begin_round
