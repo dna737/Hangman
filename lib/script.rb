@@ -17,12 +17,32 @@ class Game
     p word
   end
 
+  def seek_input
+    puts "Please enter a character (CaSe SeNsItIvE)!\nCharacters entered so far:\n"
+      p choices
+      puts "Waiting for input..."
+      
+      input = gets.chomp
+      until input.match?(/[[:alpha:]]/) || choices.include?(input)
+        #keep asking for input.
+        puts "Please enter a valid character.\nCharacters entered so far:\n"
+        p choices
+        puts "Waiting for input..." 
+        input = gets.chomp        
+      end
+      
+      choices.push(input)
+  end
+
+  def display_puzzle
+  end
+
   def begin_round
     while mistakes <= 7 
+      display_puzzle
+      seek_input
       # play the round
-      puts "Please enter a character!"
-      print "Characters entered so far:"
-      p choices
+      
     end
       puts "Sorry! You're out of chances."
   end
