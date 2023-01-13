@@ -1,12 +1,5 @@
-class Decider
-  
-  def initialize
-    puts "Welcome to the Hangman game! Please press 'p' to play a new game and 'x' to load a previous game."
-    decide
-  end
-
+module Input
   def ask_user_input(valid_options)
-    puts "Please enter 'p' to play a new game and 'x' to load a previous game."
     input = gets.chomp.downcase
     until valid_options.include?(input)
       puts "Please enter 'p' to play a new game and 'x' to load a previous game."
@@ -14,8 +7,17 @@ class Decider
     end
     input
   end
+end
+
+class Decider include Input
+  
+  def initialize
+    puts "Welcome to the Hangman game! Please press 'p' to play a new game and 'x' to load a previous game."
+    decide
+  end
 
   def new_game
+    puts "\e[H\e[2J"
     contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
     Game.new(contents).begin_game
   end
@@ -41,7 +43,7 @@ class Decider
   end
 end
 
-class Game
+class Game include Input
   private attr_accessor :mistakes, :choices
   private attr_reader :answer
   def initialize(words)
@@ -137,11 +139,17 @@ class Game
     end
   end
 
+  def save_or_continue
+    puts "Press 's' if you want to 'S'ave the game and 'c' if you want to 'C'ontinue."
+
+  end 
+
   def begin_game
     puts "Welcome to the Hangman game! You have 7 lives to guess the word!"
     while mistakes < 7 
       puts draw_hangman(mistakes)
       display_puzzle
+      break if save_or_continue
       input_array = seek_input
       check_input(input_array[0], input_array[1])
       puts "\e[H\e[2J"
