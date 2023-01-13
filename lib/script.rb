@@ -17,11 +17,14 @@ class Game
     p word
   end
 
-  def check_input(input)
+  def check_input(input, confirmation)
     unless answer.include?(input)
-      self.mistakes += 1
-      puts "mistakes: #{mistakes}"
+      p confirmation
+      if confirmation 
+        self.mistakes += 1
+      end
     end
+    puts "mistakes: #{mistakes}"
   end
 
   def clean_input(input)
@@ -52,8 +55,11 @@ class Game
         end    
       end
 
-      choices.push(input) unless choices.include?(input)
-      input
+      unless choices.include?(input)
+        choices.push(input)
+        return [choices[-1], true] #"true" meaning that this has to go thru `check_input`
+      end
+      [choices[-1], false]
   end
 
   def display_puzzle
@@ -84,8 +90,8 @@ class Game
     while mistakes <= 7 
       display_puzzle
       puts draw_hangman(mistakes)
-      input = seek_input
-      check_input(input) 
+      input_array = seek_input
+      check_input(input_array[0], input_array[1])
       break if end_game?
     end
       puts "Sorry! You're out of chances." if mistakes >= 7
