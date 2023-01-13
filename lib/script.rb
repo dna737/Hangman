@@ -63,7 +63,7 @@ class Game
   end
 
   def display_puzzle
-    print "The word is "
+    print "Guess the word: "
     word_array = answer.split("")
     word_array.each do |char| 
       if choices.include?(char)
@@ -86,16 +86,27 @@ class Game
     mistakes >= 7 || unguessed.size == 0
   end
 
+  def final_message
+    if mistakes >= 7 
+      puts "Sorry! You're out of chances! :("
+    else
+      puts "Congrats! You guessed the word!"
+    end
+  end
+
   def begin_game
-    while mistakes <= 7 
-      display_puzzle
+    puts "Welcome to the Hangman game! You have 7 lives to guess the word!"
+    while mistakes < 7 
       puts draw_hangman(mistakes)
+      display_puzzle
       input_array = seek_input
       check_input(input_array[0], input_array[1])
+      sleep(1.2)
+      puts "\e[H\e[2J"
       break if end_game?
     end
-      puts "Sorry! You're out of chances." if mistakes >= 7
-      puts "Congrats! You guessed the word!"
+    puts draw_hangman(mistakes)
+    final_message
   end
 
   def draw_hangman(index)
