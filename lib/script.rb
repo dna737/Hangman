@@ -1,3 +1,25 @@
+class Decider
+  
+  def initialize
+    puts "Welcome to the Hangman game! Please press 'p' to play a new game and 'x' to load a previous game."
+    play_or_load
+  end
+
+  def play_or_load
+    input = gets.chomp
+    until input = 'x' || 'p'
+      puts "Please enter 'p' to play a new game and 'x' to load a previous game."
+      input = gets.chomp
+    end
+    
+    if input == 'p'
+      contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
+      Game.new(contents).begin_game
+    elsif input == 'x'
+
+    end
+end
+
 class Game
   private attr_accessor :mistakes, :choices
   private attr_reader :answer
@@ -15,11 +37,11 @@ class Game
       word = words[rand(words.length - 1)]  
     end
     p word
+    word
   end
 
   def check_input(input, confirmation)
     unless answer.include?(input)
-      p confirmation
       if confirmation 
         self.mistakes += 1
       end
@@ -101,7 +123,6 @@ class Game
       display_puzzle
       input_array = seek_input
       check_input(input_array[0], input_array[1])
-      sleep(1.2)
       puts "\e[H\e[2J"
       break if end_game?
     end
@@ -164,6 +185,4 @@ class Game
 
 end
 
-contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
-
-Game.new(contents).begin_game
+Decider.new
