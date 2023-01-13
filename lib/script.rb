@@ -18,40 +18,83 @@ class Game
   end
 
   def check_input(input)
+    
     unless answer.include?(input)
-      mistakes += 1
+      begin 
+      self.mistakes += 1
+      puts "mistakes: #{mistakes}"
+      rescue => exception
+        puts exception
+      end
+    end
+  end
+
+  def clean_input(input)
+    unless input == ""
+      input = input[0]
+    else
+      input
     end
   end
 
   def seek_input
-    puts "Please enter a character (CaSe SeNsItIvE)!\nCharacters entered so far:\n"
+    puts "Please enter a character\nCharacters entered so far:\n"
       p choices
       puts "Waiting for input..."
       
-      input = gets.chomp
-      until input.match?(/[[:alpha:]]/) || choices.include?(input)
+      input = clean_input(gets.chomp)
+
+      until input.match?(/[[:alpha:]]/)
+        input = input.downcase
+        if choices.include?(input)
+          next
+        else
         #keep asking for input.
         puts "Please enter a valid character.\nCharacters entered so far:\n"
         p choices
         puts "Waiting for input..." 
-        input = gets.chomp        
+        input = gets.chomp    
+        end    
       end
-      choices.push(input)
 
+      choices.push(input) unless choices.include?(input)
+      input
   end
 
   def display_puzzle
+    print "The word is "
+    word_array = answer.split("")
+    word_array.each do |char| 
+      if choices.include?(char)
+        print "#{char} "
+      else 
+        print "_ " 
+      end
+    end
+    puts "\n\n=================== \n\n"
   end
 
-  def begin_round
+  def end_game?
+    word_array = answer.split("")
+    unguessed = []
+    word_array.each do |char|
+      unless choices.include?(char)
+        unguessed.push("e")
+      end
+    end
+    mistakes >= 7 || unguessed.size == 0
+  end
+
+  def begin_game
     while mistakes <= 7 
       display_puzzle
-      seek_input
-      check_input
-      # play the round
-      
+      draw_hangman(mistakes)
+      input = seek_input
+      check_input(input)
+      break if end_game?
     end
-      puts "Sorry! You're out of chances."
+      puts "Sorry! You're out of chances." if mistakes >= 7
+      puts "Congrats! You guessed the word!"
   end
 
   def draw_hangman(index)
@@ -111,4 +154,4 @@ end
 
 contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
 
-Game.new(contents).begin_round
+Game.new(contents).begin_game
