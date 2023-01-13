@@ -18,14 +18,9 @@ class Game
   end
 
   def check_input(input)
-    
     unless answer.include?(input)
-      begin 
       self.mistakes += 1
       puts "mistakes: #{mistakes}"
-      rescue => exception
-        puts exception
-      end
     end
   end
 
@@ -88,9 +83,9 @@ class Game
   def begin_game
     while mistakes <= 7 
       display_puzzle
-      draw_hangman(mistakes)
+      puts draw_hangman(mistakes)
       input = seek_input
-      check_input(input)
+      check_input(input) 
       break if end_game?
     end
       puts "Sorry! You're out of chances." if mistakes >= 7
