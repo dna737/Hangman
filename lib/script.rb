@@ -2,22 +2,51 @@ class Decider
   
   def initialize
     puts "Welcome to the Hangman game! Please press 'p' to play a new game and 'x' to load a previous game."
-    play_or_load
+    decide
   end
 
-  def play_or_load
-    input = gets.chomp
-    until input = 'x' || 'p'
+  def ask_user_input
+    puts "Please enter 'p' to play a new game and 'x' to load a previous game."
+    input = gets.chomp.downcase
+    until input = 'x' || input = 'p'
       puts "Please enter 'p' to play a new game and 'x' to load a previous game."
-      input = gets.chomp
+      input = gets.chomp.downcase
     end
     
     if input == 'p'
       contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
       Game.new(contents).begin_game
     elsif input == 'x'
-
+      if Dir.exist?("saved_games")
+        #TODO: implement a feature that lets you load from a list of previous games.
+      else
+        puts "No saved games found. Please enter 'p' to start a new game or 'q' to quit the program."
+        input = gets.chomp.downcase
+        until input = 'p' || input = 'q'
+          puts "Please enter 'p' to start a new game or 'q' to quit the program."
+          input = gets.chomp.downcase
+        end
+        if input = 'p'
+        end
+      end
     end
+  end
+
+  def new_game
+
+  end
+
+  def load_game
+
+  end
+
+  def decide
+    initial_input = ask_user_input
+    case initial_input
+    when 'p' then new_game
+    when 'x' then load_game 
+    end
+  end
 end
 
 class Game
