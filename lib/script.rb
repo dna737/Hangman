@@ -5,43 +5,35 @@ class Decider
     decide
   end
 
-  def ask_user_input
+  def ask_user_input(valid_options)
     puts "Please enter 'p' to play a new game and 'x' to load a previous game."
     input = gets.chomp.downcase
-    until input = 'x' || input = 'p'
+    until valid_options.include?(input)
       puts "Please enter 'p' to play a new game and 'x' to load a previous game."
       input = gets.chomp.downcase
     end
-    
-    if input == 'p'
-      contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
-      Game.new(contents).begin_game
-    elsif input == 'x'
-      if Dir.exist?("saved_games")
-        #TODO: implement a feature that lets you load from a list of previous games.
-      else
-        puts "No saved games found. Please enter 'p' to start a new game or 'q' to quit the program."
-        input = gets.chomp.downcase
-        until input = 'p' || input = 'q'
-          puts "Please enter 'p' to start a new game or 'q' to quit the program."
-          input = gets.chomp.downcase
-        end
-        if input = 'p'
-        end
-      end
-    end
+    input
   end
 
   def new_game
-
+    contents = File.readlines("./google-10000-english-no-swears.txt").map{|word| word.chomp}
+    Game.new(contents).begin_game
   end
 
   def load_game
-
+    if Dir.exist?("saved_games")
+      #TODO: implement a feature that lets you load from a list of previous games.
+      puts "Please select the game you want to load and play!"
+    else
+      puts "No saved games found. Please enter 'p' to start a new game or 'q' to quit the program."
+      input = ask_user_input([].push('p').push('q'))
+      new_game if input == 'p'
+      puts "Goodbye! :)" if input == 'q'
+    end
   end
 
   def decide
-    initial_input = ask_user_input
+    initial_input = ask_user_input([].push('p').push('x')) #'p' and 'x' are the valid options
     case initial_input
     when 'p' then new_game
     when 'x' then load_game 
