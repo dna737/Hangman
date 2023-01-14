@@ -38,7 +38,7 @@ class Decider include Input
       options = []
       for i in 1..files.size do options.push(i.to_s) end
       input = ask_user_input(options)
-      puts(Marshal.load(File.read("#{files[input.to_i-1]}")).load_words)
+      (Marshal.load(File.read("#{files[input.to_i-1]}")).begin_game)
     else
       puts "No saved games found. Please enter 'p' to start a new game or 'q' to quit the program."
       input = ask_user_input([].push('p').push('q'))
@@ -58,7 +58,8 @@ end
 
 class Game include Input
   private attr_accessor :mistakes, :choices
-  private attr_reader :answer, :words
+  private attr_reader :answer
+  attr_reader :words
   def initialize(words)
     @words = words    
     @answer = select_word(words)
@@ -67,9 +68,6 @@ class Game include Input
     draw_hangman(mistakes)
   end
 
-  def self.load_words
-    words
-  end
 
   def select_word(words)
     word = words[rand(words.length - 1)]
@@ -176,7 +174,7 @@ class Game include Input
   end
 
   def begin_game
-    puts "Welcome to the Hangman game! You have 7 lives to guess the word!"
+    puts "Welcome to the Hangman game! You have #{7-mistakes} lives to guess the word!"
     while mistakes < 7 
       puts draw_hangman(mistakes)
       display_puzzle
