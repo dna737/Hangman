@@ -1,5 +1,3 @@
-require 'yaml'
-
 module Input
   def ask_user_input(valid_options)
     input = gets.chomp.downcase
@@ -156,10 +154,10 @@ class Game include Input
 
   #Returns true if the user wants to save the game; false otherwise.
   def save_or_continue
-    puts "Press 's' if you want to 'S'ave the game and 'c' if you want to 'C'ontinue."
-    input = ask_user_input([].push('s').push('c'))
+    puts "Press '1' if you want to save the game and '2' if you want to continue."
+    input = ask_user_input([].push('1').push('2'))
     puts "\e[H\e[2J"
-    input == 's'
+    input == '1'
   end 
 
   def save_game
