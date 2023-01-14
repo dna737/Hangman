@@ -30,7 +30,6 @@ class Decider include Input
 
   def load_game
     if Dir.exist?("saved_games")
-      #TODO: implement a feature that lets you load from a list of previous games.
       puts "Please select the game you want to load and play!"
       files = retrieve_files
       options = []
@@ -38,18 +37,18 @@ class Decider include Input
       input = ask_user_input(options)
       (Marshal.load(File.read("#{files[input.to_i-1]}")).begin_game)
     else
-      puts "No saved games found. Please enter 'p' to start a new game or 'q' to quit the program."
-      input = ask_user_input([].push('p').push('q'))
-      new_game if input == 'p'
-      puts "Goodbye! :)" if input == 'q'
+      puts "No saved games found. Please enter '1' to start a new game or '2' to quit the program."
+      input = ask_user_input([].push('1').push('2'))
+      new_game if input == '1'
+      puts "Goodbye! :)" if input == '2'
     end
   end
 
   def decide
-    initial_input = ask_user_input([].push('p').push('x')) #'p' and 'x' are the valid options
+    initial_input = ask_user_input([].push('1').push('2')) #'1' and '2' are the valid options
     case initial_input
-    when 'p' then new_game
-    when 'x' then load_game 
+    when '1' then new_game
+    when '2' then load_game 
     end
   end
 end
@@ -57,7 +56,6 @@ end
 class Game include Input
   private attr_accessor :mistakes, :choices
   private attr_reader :answer
-  attr_reader :words
   def initialize(words)
     @words = words    
     @answer = select_word(words)
@@ -72,7 +70,6 @@ class Game include Input
     until word.length.between?(5,12)
       word = words[rand(words.length - 1)]  
     end
-    p word
     word
   end
 
